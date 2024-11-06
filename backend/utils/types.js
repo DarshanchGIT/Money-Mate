@@ -1,14 +1,14 @@
 const z = require("zod");
 
 const signUpSchema = z.object({
-  username: z.string().min(4).max(15),
+  username: z.string().min(4).max(30),
   password: z.string().min(4),
   firstName: z.string().min(4).max(50),
   lastName: z.string().min(4).max(50),
 });
 
 const signInSchema = z.object({
-  username: z.string().min(4).max(15),
+  username: z.string().min(4).max(30),
   password: z.string().min(4),
 });
 

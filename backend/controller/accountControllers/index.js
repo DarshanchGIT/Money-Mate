@@ -1,6 +1,6 @@
 const { Account } = require("../../model/database");
 const mongoose = require("mongoose");
-const { transferSchema } = require("../../utils/types");
+const { tranferSchema } = require("../../utils/types");
 
 const getBalance = async (req, res) => {
   const id = req.userId;
@@ -33,7 +33,7 @@ const transferFund = async (req, res) => {
     session.startTransaction();
 
     const body = req.body;
-    const response = transferSchema.safeParse(body);
+    const response = tranferSchema.safeParse(body);
 
     if (!response.success) {
       return res.status(401).json({ message: "Invalid request body" });

@@ -4,7 +4,7 @@ const {
   signInSchema,
   updateSchema,
 } = require("../../utils/types");
-const { generateToken } = require("../../utils/JWTutil");
+const { generateToken, decodeToken } = require("../../utils/JWTutil");
 
 const signUp = async (req, res, next) => {
   const body = req.body;
@@ -55,7 +55,10 @@ const signIn = async (req, res, next) => {
   }
 
   try {
-    const user = await User.findOne({ username: body.username });
+    const user = await User.findOne({
+      username: body.username,
+      password: body.password,
+    });
     if (!user) {
       return res
         .status(404)
@@ -96,32 +99,43 @@ const updateUser = async (req, res, next) => {
     next(error);
   }
 };
-const bulk = async (req, res) => {
-  const filter = req.query.filter || "";
 
-  const users = await User.find({
-    $or: [
-      {
-        firstName: {
-          $regex: filter,
-        },
-      },
-      {
-        lastName: {
-          $regex: filter,
-        },
-      },
-    ],
-  });
+const bulk = async (req, res, next) => {
+  try {
+    const filter = req.query.filter || "";
 
-  res.json({
-    user: users.map((user) => ({
+    const users = await User.find({
+      // $ne => select doc which is not Equal to
+      _id: { $ne: req.userId },
+      $or: [
+        { firstName: { $regex: filter, $options: "i" } },
+        { lastName: { $regex: filter, $options: "i" } },
+      ],
+    });
+
+    const formattedUsers = users.map((user) => ({
       username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
       _id: user._id,
-    })),
-  });
+    }));
+
+    res.json({ user: formattedUsers });
+  } catch (error) {
+    next(error);
+  }
 };
 
-module.exports = { signUp, signIn, updateUser, bulk };
+const me = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ _id: req.userId });
+    return res.json({
+      message: "Here's user details",
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { signUp, signIn, updateUser, bulk, me };

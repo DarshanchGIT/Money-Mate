@@ -5,6 +5,7 @@ const {
   signIn,
   updateUser,
   bulk,
+  me,
 } = require("../../controller/userControllers/index");
 const { usermiddleware } = require("../../middlewares/userMiddleware");
 
@@ -16,7 +17,8 @@ userRouter.get("/", (req, res) => {
 //main end points
 userRouter.post("/signup", signUp);
 userRouter.post("/signin", signIn);
+userRouter.get("/me", usermiddleware, me);
 userRouter.put("/update", usermiddleware, updateUser);
-userRouter.get("/bulk", bulk);
+userRouter.get("/bulk", usermiddleware, bulk);
 
 module.exports = userRouter;
