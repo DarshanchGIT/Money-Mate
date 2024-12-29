@@ -6,8 +6,7 @@ const routes = require("./routes/index");
 const errorHandler = require("./middlewares/errorHandler");
 
 // Middleware for handling CORS and JSON requests
-app.use(cors({ origin: 'http://localhost:5173' }));
-
+app.use(cors({ origin: "https://money-mate-gamma.vercel.app" }));
 app.use(express.json());
 
 // Welcome Route

@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// const userBackendURL = "http://localhost:3000/api/v1/user";
 const backendURL = import.meta.env.VITE_APP_BACKEND_URL;
 
 const SignUp = async ({ firstName, lastName, email, password }) => {
